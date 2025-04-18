@@ -126,7 +126,7 @@ export default function ContactPage() {
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center">
           <Link href="/" className="text-xl font-bold text-primary mr-6">
-            TechInsight
+           Priyank_Patel
           </Link>
           <MainNav />
         </div>
@@ -374,7 +374,7 @@ export default function ContactPage() {
       <footer className="w-full border-t py-6 md:py-0">
         <div className="container flex flex-col md:flex-row items-center justify-between gap-4 md:h-16">
           <p className="text-sm text-muted-foreground">
-            © 2025 TechInsight. All rights reserved.
+            © 2025 Patel Priyank. All rights reserved.
           </p>
           <div className="flex items-center gap-4">
             <Link

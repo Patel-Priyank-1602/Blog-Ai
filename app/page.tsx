@@ -136,8 +136,8 @@ export default function TechBlog() {
     <div className="min-h-screen flex flex-col">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center">
-          <Link href="/" className="text-xl font-bold text-primary mr-6">
-            TechInsight
+          <Link href="/" className="text-xl font-bold text-primary mr-16">
+            Priyank_Patel
           </Link>
           <MainNav />
         </div>
@@ -148,11 +148,10 @@ export default function TechBlog() {
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
             <div className="space-y-2">
               <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl">
-                Which AI is the Best for Coding in 2025?
-              </h1>
+              Top Coding AI Tools
+              </h1><br/>
               <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-                A comprehensive comparison of the top AI coding assistants in the
-                market today
+              Which AI is the Best for Coding in 2025? A Comprehensive Comparison of the Top AI Coding Assistants on the Market Today.
               </p>
             </div>
           </div>
@@ -646,7 +645,7 @@ export default function TechBlog() {
       <footer className="w-full border-t py-6 md:py-0">
         <div className="container flex flex-col md:flex-row items-center justify-between gap-4 md:h-16">
           <p className="text-sm text-muted-foreground">
-            © 2025 TechInsight. All rights reserved.
+            © 2025 Priyank Patel. All rights reserved.
           </p>
           <div className="flex items-center gap-4">
             <Link
