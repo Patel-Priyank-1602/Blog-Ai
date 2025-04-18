@@ -1,54 +1,134 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Mail, MapPin, Phone, Menu, X } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
-import { MainNav } from "@/components/main-nav"
-import { Mail, MapPin, Phone } from "lucide-react"
-import Link from "next/link"
-import { useState } from "react"
+const navItems = [
+  { name: "Home", href: "/" },
+  { name: "Contact", href: "/contact" },
+];
+
+function MainNav() {
+  const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleMenu = () => setIsOpen(!isOpen);
+
+  return (
+    <nav className="w-full flex items-center justify-between px-4 py-2">
+      {/* Desktop Nav */}
+      <ul className="hidden md:flex gap-6 ml-auto">
+        {navItems.map((item) => (
+          <li key={item.href}>
+            <Link
+              href={item.href}
+              className={cn(
+                "text-sm font-medium transition-colors hover:text-primary",
+                pathname === item.href
+                  ? "text-primary font-semibold"
+                  : "text-muted-foreground"
+              )}
+            >
+              {item.name}
+            </Link>
+          </li>
+        ))}
+      </ul>
+
+      {/* Mobile Menu Button */}
+      <button
+        className="md:hidden ml-auto p-0"
+        onClick={toggleMenu}
+        aria-label="Toggle menu"
+      >
+        {isOpen ? <X size={24} /> : <Menu size={24} />}
+      </button>
+
+      {/* Mobile Nav */}
+      {isOpen && (
+        <div className="md:hidden absolute top-16 left-0 w-full bg-background shadow-lg z-50">
+          <ul className="flex flex-col items-center gap-4 py-4">
+            {navItems.map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  onClick={toggleMenu}
+                  className={cn(
+                    "text-sm font-medium transition-colors hover:text-primary",
+                    pathname === item.href
+                      ? "text-primary font-semibold"
+                      : "text-muted-foreground"
+                  )}
+                >
+                  {item.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </nav>
+  );
+}
 
 export default function ContactPage() {
-  const [formSubmitted, setFormSubmitted] = useState(false)
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // In a real application, you would handle the form submission here
-    setFormSubmitted(true)
-  }
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch(form.action, {
+        method: "POST",
+        body: formData,
+        headers: {
+          Accept: "application/json",
+        },
+      });
+
+      if (response.ok) {
+        setFormSubmitted(true);
+      } else {
+        throw new Error("Form submission failed");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert("Failed to send message. Please try again later.");
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center justify-between">
-          <Link href="/" className="text-xl font-bold text-primary">
+        <div className="container flex h-16 items-center">
+          <Link href="/" className="text-xl font-bold text-primary mr-6">
             TechInsight
           </Link>
           <MainNav />
-          <button className="md:hidden">
-            <span className="sr-only">Toggle menu</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="h-6 w-6"
-            >
-              <line x1="4" x2="20" y1="12" y2="12" />
-              <line x1="4" x2="20" y1="6" y2="6" />
-              <line x1="4" x2="20" y1="18" y2="18" />
-            </svg>
-          </button>
         </div>
       </header>
 
@@ -56,7 +136,9 @@ export default function ContactPage() {
         <div className="container px-4 py-12 md:px-6">
           <div className="flex flex-col items-start gap-4 md:gap-8">
             <div className="space-y-2">
-              <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Contact Us</h1>
+              <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                Contact Us
+              </h1>
               <p className="text-muted-foreground md:text-xl">
                 Get in touch with our team. We'd love to hear from you!
               </p>
@@ -69,7 +151,8 @@ export default function ContactPage() {
                 <CardHeader>
                   <CardTitle>Send Us a Message</CardTitle>
                   <CardDescription>
-                    Fill out the form below and we'll get back to you as soon as possible.
+                    Fill out the form below and we'll get back to you as soon as
+                    possible.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -93,41 +176,68 @@ export default function ContactPage() {
                       </div>
                       <h3 className="text-xl font-bold mb-2">Message Sent!</h3>
                       <p className="text-muted-foreground">
-                        Thank you for reaching out. We'll respond to your inquiry shortly.
+                        Thank you for reaching out. We'll respond to your inquiry
+                        shortly.
                       </p>
-                      <Button className="mt-4" onClick={() => setFormSubmitted(false)}>
+                      <Button
+                        className="mt-4"
+                        onClick={() => setFormSubmitted(false)}
+                      >
                         Send Another Message
                       </Button>
                     </div>
                   ) : (
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form
+                      action="https://formspree.io/f/xqapvwba"
+                      method="POST"
+                      onSubmit={handleSubmit}
+                      className="space-y-4"
+                    >
                       <div className="grid gap-4">
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-2">
                             <Label htmlFor="first-name">First name</Label>
-                            <Input id="first-name" placeholder="John" required />
+                            <Input
+                              id="first-name"
+                              name="first-name"
+                              placeholder=""
+                              required
+                            />
                           </div>
                           <div className="space-y-2">
                             <Label htmlFor="last-name">Last name</Label>
-                            <Input id="last-name" placeholder="Doe" required />
+                            <Input
+                              id="last-name"
+                              name="last-name"
+                              placeholder=""
+                              required
+                            />
                           </div>
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="email">Email</Label>
-                          <Input id="email" placeholder="john.doe@example.com" type="email" required />
+                          <Input
+                            id="email"
+                            name="email"
+                            placeholder=""
+                            type="email"
+                            required
+                          />
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="subject">Subject</Label>
-                          <Select>
+                          <Select name="subject">
                             <SelectTrigger id="subject">
                               <SelectValue placeholder="Select a subject" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="general">General Inquiry</SelectItem>
-                              <SelectItem value="support">Technical Support</SelectItem>
+                              <SelectItem value="general">
+                                General Inquiry
+                              </SelectItem>
+                              <SelectItem value="support">
+                                Technical Support
+                              </SelectItem>
                               <SelectItem value="feedback">Feedback</SelectItem>
-                              <SelectItem value="partnership">Partnership Opportunity</SelectItem>
-                              <SelectItem value="press">Press Inquiry</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
@@ -135,6 +245,7 @@ export default function ContactPage() {
                           <Label htmlFor="message">Message</Label>
                           <Textarea
                             id="message"
+                            name="message"
                             placeholder="Please provide details about your inquiry..."
                             className="min-h-[120px]"
                             required
@@ -154,31 +265,27 @@ export default function ContactPage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Contact Information</CardTitle>
-                  <CardDescription>Here are the different ways you can reach us.</CardDescription>
+                  <CardDescription>
+                    Here are the different ways you can reach us.
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex items-start gap-3">
                     <Mail className="h-5 w-5 text-primary mt-0.5" />
                     <div>
                       <h3 className="font-medium">Email</h3>
-                      <p className="text-sm text-muted-foreground">contact@techinsight.com</p>
-                      <p className="text-sm text-muted-foreground">support@techinsight.com</p>
+                      <p className="text-sm text-muted-foreground">
+                        patelpriyank2526@gmail.com
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <Phone className="h-5 w-5 text-primary mt-0.5" />
                     <div>
                       <h3 className="font-medium">Phone</h3>
-                      <p className="text-sm text-muted-foreground">+1 (555) 123-4567</p>
-                      <p className="text-sm text-muted-foreground">Mon-Fri, 9:00 AM - 5:00 PM EST</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <MapPin className="h-5 w-5 text-primary mt-0.5" />
-                    <div>
-                      <h3 className="font-medium">Office</h3>
-                      <p className="text-sm text-muted-foreground">123 Tech Avenue</p>
-                      <p className="text-sm text-muted-foreground">San Francisco, CA 94107</p>
+                      <p className="text-sm text-muted-foreground">
+                        +91 9512771016
+                      </p>
                     </div>
                   </div>
                 </CardContent>
@@ -187,11 +294,16 @@ export default function ContactPage() {
               <Card>
                 <CardHeader>
                   <CardTitle>Follow Us</CardTitle>
-                  <CardDescription>Stay connected with us on social media.</CardDescription>
+                  <CardDescription>
+                    Stay connected with us on social media.
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 gap-4">
-                    <Link href="#" className="flex items-center gap-2 p-2 rounded-md hover:bg-muted transition-colors">
+                    <Link
+                      href="https://x.com/Priyank_P16"
+                      className="flex items-center gap-2 p-2 rounded-md hover:bg-muted transition-colors"
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -208,7 +320,10 @@ export default function ContactPage() {
                       </svg>
                       <span>Twitter</span>
                     </Link>
-                    <Link href="#" className="flex items-center gap-2 p-2 rounded-md hover:bg-muted transition-colors">
+                    <Link
+                      href="https://www.linkedin.com/in/patel-priyank-945131288/"
+                      className="flex items-center gap-2 p-2 rounded-md hover:bg-muted transition-colors"
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -227,7 +342,10 @@ export default function ContactPage() {
                       </svg>
                       <span>LinkedIn</span>
                     </Link>
-                    <Link href="#" className="flex items-center gap-2 p-2 rounded-md hover:bg-muted transition-colors">
+                    <Link
+                      href="https://github.com/Patel-Priyank-1602"
+                      className="flex items-center gap-2 p-2 rounded-md hover:bg-muted transition-colors"
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -245,24 +363,6 @@ export default function ContactPage() {
                       </svg>
                       <span>GitHub</span>
                     </Link>
-                    <Link href="#" className="flex items-center gap-2 p-2 rounded-md hover:bg-muted transition-colors">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="h-5 w-5 text-primary"
-                      >
-                        <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17" />
-                        <path d="m10 15 5-3-5-3z" />
-                      </svg>
-                      <span>YouTube</span>
-                    </Link>
                   </div>
                 </CardContent>
               </Card>
@@ -273,23 +373,31 @@ export default function ContactPage() {
 
       <footer className="w-full border-t py-6 md:py-0">
         <div className="container flex flex-col md:flex-row items-center justify-between gap-4 md:h-16">
-          <p className="text-sm text-muted-foreground">&copy; 2025 TechInsight. All rights reserved.</p>
+          <p className="text-sm text-muted-foreground">
+            © 2025 TechInsight. All rights reserved.
+          </p>
           <div className="flex items-center gap-4">
-            <Link href="#" className="text-sm text-muted-foreground hover:text-foreground">
+            <Link
+              href="https://x.com/Priyank_P16"
+              className="text-sm text-muted-foreground hover:text-foreground"
+            >
               Twitter
             </Link>
-            <Link href="#" className="text-sm text-muted-foreground hover:text-foreground">
+            <Link
+              href="https://www.linkedin.com/in/patel-priyank-945131288/"
+              className="text-sm text-muted-foreground hover:text-foreground"
+            >
               LinkedIn
             </Link>
-            <Link href="#" className="text-sm text-muted-foreground hover:text-foreground">
+            <Link
+              href="https://github.com/Patel-Priyank-1602"
+              className="text-sm text-muted-foreground hover:text-foreground"
+            >
               GitHub
-            </Link>
-            <Link href="#" className="text-sm text-muted-foreground hover:text-foreground">
-              YouTube
             </Link>
           </div>
         </div>
       </footer>
     </div>
-  )
+  );
 }
